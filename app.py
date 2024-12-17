@@ -20,6 +20,5 @@ def home():
     return "Hello, Render API!"
 
 if __name__ == '__main__':
-    # Отримання порту зі змінної оточення або встановлення за замовчуванням 5000
-    port = int(os.getenv('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    port = os.getenv('PORT', 10000)  # порт для Render
+    app.run(host='0.0.0.0', port=port, debug=False)  # відключення debug mode
