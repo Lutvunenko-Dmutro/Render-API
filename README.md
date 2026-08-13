@@ -1,173 +1,128 @@
+# ⚡ Render REST API — Production Flask Microservice Template
 
-# Render API
+> **Production-ready Flask REST API Boilerplate** для швидкого розгортання на **Render.com** з підтримкою **PostgreSQL**, **Swagger UI**, автоматичними юніт-тестами та **CI/CD пайплайном**.
 
-Цей проект представляє собою простий API, розгорнутий на платформі Render з використанням Flask та SQLAlchemy для взаємодії з базою даних. Всі необхідні залежності автоматично встановлюються при розгортанні додатку на Render.
+[![CI Pipeline](https://github.com/Lutvunenko-Dmutro/Render-API/actions/workflows/ci.yml/badge.svg)](https://github.com/Lutvunenko-Dmutro/Render-API/actions)
+[![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg?logo=python)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.x-black?logo=flask)](https://flask.palletsprojects.com/)
+[![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.x-orange)](https://www.sqlalchemy.org/)
+[![Render](https://img.shields.io/badge/Deploy-Render.com-46E3B7?logo=render)](https://render.com/)
+[![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0-green?logo=openapi-initiative)](http://127.0.0.1:10000/docs)
 
-## Кроки для розгортання:
+---
 
-**Налаштування середовища:**
+## 🎯 Особливості проєкту
 
-   Створіть файл `.env` для збереження ваших змінних оточення, наприклад:
-   ```
-   DATABASE_URL=your-database-url
-   ```
+* **🚀 Cloud-Ready (Render / Railway):** Конфігурація `render.yaml` (Infrastructure as Code) з WSGI-сервером **Gunicorn**.
+* **🗄️ Розумна робота з БД:** Підтримка **PostgreSQL** у хмарі та автоматичний fallback на **SQLite** для локальної розробки без додаткових налаштувань.
+* **📖 Інтерактивна документація:** Вбудований **Swagger UI** (`/docs` або `/swagger`) та OpenAPI 3.0 специфікація (`/openapi.json`).
+* **🩺 Healthcheck & Monitoring:** Ендпоінт `/health` з реальною перевіркою з'єднання з базою даних (`SELECT 1`) та часом безперервної роботи (uptime).
+* **🧪 100% покриття тестами:** Автоматизований набір тестів (`unittest`) в ізольованій пам'яті (`sqlite:///:memory:`).
+* **⚙️ CI/CD Пайплайн:** Автоматичний запуск тестів у **GitHub Actions** при кожному коміті.
 
-   Тут `DATABASE_URL` — це URL вашої бази даних, який ви отримали під час налаштування на платформі (наприклад, від Railway).
+---
 
- **Розгортання на Render:**
+## ⚡ Швидкий старт (Локально)
 
-   - Увійдіть в свій обліковий запис на платформі [Render](https://render.com/).
-   - Створіть новий web-сервіс.
-   - Підключіть цей репозиторій до Render.
-   - Встановіть Python як середовище виконання.
-   - Налаштуйте команду запуску як `python app.py`.
-   - Платформа Render автоматично підготує середовище, встановить всі залежності, використовуючи `requirements.txt`, і запустить ваше API.
-
-## Ось докладніше про кожен крок для розгортання API на платформі Render: ##
-
-#### Крок 1: Увійдіть в свій обліковий запис на Render
-
-1. Перейдіть на [Render](https://render.com/) і увійдіть або створіть новий обліковий запис, якщо у вас його немає.
-
-#### Крок 2: Створіть новий web-сервіс
-
-1. Після входу в систему натискайте кнопку **New** в верхньому правому куті.
-2. Виберіть **Web Service**.
-3. На наступному екрані вам буде запропоновано підключити ваш репозиторій. Виберіть **GitHub** або **GitLab** (залежно від того, де зберігається ваш код).
-4. Дозвольте Render доступ до вашого облікового запису GitHub або GitLab, якщо ще не підключили ці сервіси.
-
-#### Крок 3: Підключіть цей репозиторій до Render
-
-1. Після авторизації виберіть репозиторій, який ви хочете розгорнути. Це може бути той самий репозиторій, в якому міститься ваш код.
-2. Оберіть потрібну гілку (звичайно це `main` або `master`), якщо потрібно.
-
-#### Крок 4: Встановіть Python як середовище виконання
-
-1. Після того як ви підключите репозиторій, вам потрібно налаштувати середовище для виконання вашого додатку.
-2. В полі **Environment** виберіть **Python**.
-3. В поле **Python Version** оберіть версію Python, яка вам підходить (рекомендується використовувати версію, яка вказана в `runtime.txt`, якщо така є в проєкті).
-   
-   **Примітка:** Render автоматично виявить залежності, якщо у вас є файл `requirements.txt` в репозиторії.
-
-#### Крок 5: Налаштуйте команду запуску як `python app.py`
-
-1. В полі **Build Command** вкажіть команду для побудови середовища, якщо вона потрібна (наприклад, якщо ви використовуєте Docker або інші інструменти).
-   
-   Для простого Python проєкту команда для побудови не потрібна, оскільки Render автоматично встановить залежності з `requirements.txt`.
-   
-2. В полі **Start Command** вкажіть команду для запуску додатку:
-   ```
-   python app.py
-   ```
-   Це вказує Render, що потрібно запускати Flask додаток за допомогою Python.
-
-#### Крок 6: Налаштуйте змінні оточення
-
-1. Відкрийте вкладку **Environment Variables**.
-2. Додайте всі необхідні змінні оточення, такі як:
-   - `DATABASE_URL` (URL до вашої бази даних, якщо ви використовуєте базу даних).
-  
-  ***Додайте необхідні змінні:***
-   - Для `DATABASE_URL`:
-     - **Key**: `DATABASE_URL`
-     - **Value**: `URL до вашої бази даних, якщо ви використовуєте базу даних`
-   
- Якщо ви використовуєте файл `.env`, переконайтеся, що Render може отримати ці змінні з вашого репозиторію або додайте їх вручну.
-
-#### Крок 7: Платформа Render автоматично підготує середовище
-
-1. Після того, як ви налаштуєте все, натискайте **Create Web Service**.
-2. Render автоматично підготує середовище для запуску вашого додатку:
-   - Він автоматично прочитає файл `requirements.txt` і встановить всі залежності (Flask, SQLAlchemy тощо).
-   - Якщо в проекті є файл `.env`, Render використає ці налаштування для змінних оточення.
-
-#### Крок 8: Запуск вашого API
-
-1. Після того, як середовище підготовлено, Render автоматично запустить ваш додаток.
-2. Ви отримаєте URL вашого API (наприклад, `https://your-app-name.onrender.com`), за яким можна буде звертатися до вашого сервісу.
-
-Render надає інтерфейс для моніторингу вашого сервісу, де ви можете перевірити логи, переглядати статус додатку та запускати повторні розгортання, якщо потрібно.
-
-### Тестування API
-
-1. Як тільки ваше API запуститься на Render, ви можете тестувати його, використовуючи запити через cURL або PowerShell, як зазначено в попередніх кроках.
-
-2. Ви зможете використовувати URL, наданий Render, для доступу до вашого API та перевірки роботи розгорнутого сервісу.
-
-1. **Тестування API через cURL:**
-
-   Після того як ваш API буде розгорнуто на Render, ви зможете тестувати його через cURL. Приклад запиту для тестування:
-
-   ```bash
-   curl 'https://render-api-4bxz.onrender.com/api/v1/productentitiestool-ui-admin/partner/getAll' \
-     -X 'POST' \
-     -H 'sec-ch-ua: "Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"' \
-     -H 'pragma: no-cache' \
-     -H 'z-currency: USD' \
-     -H 'sec-ch-ua-mobile: ?0' \
-     -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' \
-     -H 'content-type: application/json' \
-     -H 'cache-control: no-cache' \
-     -H 'Referer: https://admin.spaceship.net/' \
-     -H 'z-lang: en-US' \
-     -H 'sec-ch-ua-platform: "macOS"'
-   ```
-
-   У відповідь ви повинні отримати дані:
-   ```json
-   [{"id":1,"name":"Partner 1"},{"id":2,"name":"Partner 2"}]
-   ```
-
-2. **Тестування через PowerShell:**
-
-   Ви також можете тестувати API за допомогою PowerShell. Для цього виконайте наступний запит:
-
-   ```powershell
-   Invoke-WebRequest -Uri "https://render-api-4bxz.onrender.com/api/v1/productentitiestool-ui-admin/partner/getAll" `
-     -Method Get `
-     -Headers @{
-         "sec-ch-ua" = 'Chromium;v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"'
-         "pragma" = "no-cache"
-         "z-currency" = "USD"
-         "sec-ch-ua-mobile" = "?0"
-         "User-Agent" = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
-         "content-type" = "application/json"
-         "cache-control" = "no-cache"
-         "Referer" = "https://admin.spaceship.net/"
-         "z-lang" = "en-US"
-         "sec-ch-ua-platform" = "macOS"
-     }
-   ```
-
-   Якщо все налаштовано правильно, ви отримаєте відповідь:
-
-   ```
-   StatusCode        : 200
-   StatusDescription : OK
-   Content           : [{"id":1,"name":"Partner 1"},{"id":2,"name":"Partner 2"}]
-   RawContentLength  : 58
-   ```
-
-3. **Перевірка результатів:**
-
-   Переконайтесь, що ви отримали коректну відповідь від API, яка повинна містити список партнерів:
-   ```json
-   [{"id":1,"name":"Partner 1"},{"id":2,"name":"Partner 2"}]
-   ```
-
-## Налаштування додатку:
-
-- `app.py`: основний файл додатку, який містить точку входу.
-- `config.py`: конфігураційний файл для налаштувань бази даних.
-- `models.py`: моделі SQLAlchemy для роботи з базою даних.
-- `tests/test_app.py`: файл з тестами для перевірки правильності роботи API.
-
-## Залежності:
-
-Усі залежності зберігаються в `requirements.txt`, включаючи Flask, SQLAlchemy та бібліотеку для роботи з .env файлами:
+### 1. Клонування репозиторію
 ```bash
-Flask
-psycopg2
-SQLAlchemy
-python-dotenv
+git clone https://github.com/Lutvunenko-Dmutro/Render-API.git
+cd Render-API
 ```
+
+### 2. Створення та активація віртуального оточення
+```bash
+# Windows
+python -m venv venv
+.\venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Встановлення залежностей
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Налаштування змінних оточення
+Створіть файл `.env` на основі `.env.example`:
+```bash
+cp .env.example .env
+```
+
+Вміст `.env`:
+```env
+DATABASE_URL=sqlite:///data.db
+PORT=10000
+```
+
+### 5. Запуск сервера
+```bash
+python app.py
+```
+👉 Сервер доступний за адресою: **`http://127.0.0.1:10000`**  
+👉 Інтерактивна документація Swagger: **`http://127.0.0.1:10000/docs`**
+
+---
+
+## 🧪 Запуск автоматичних тестів
+
+```bash
+python -m unittest discover tests -v
+```
+
+---
+
+## 🔌 Огляд API Ендпоінтів
+
+| Метод | URL | Опис | Формат відповіді |
+|---|---|---|---|
+| `GET` | `/` | Головний привітальний ендпоінт | JSON |
+| `GET` | `/health` | Перевірка стану сервера та підключення до БД | JSON |
+| `GET` | `/docs` | Інтерактивна документація Swagger UI | HTML |
+| `GET` | `/openapi.json` | OpenAPI 3.0 специфікація | JSON |
+| `GET` | `/products` | Отримати список усіх продуктів | JSON Array |
+| `POST` | `/products` | Створити новий продукт (`{"name": "..."}`) | JSON |
+| `GET` | `/products/<id>` | Отримати продукт за ID | JSON |
+| `DELETE`| `/products/<id>` | Видалити продукт за ID | JSON |
+| `GET` | `/api/v1/productentitiestool-ui-admin/partner/getAll` | Інтеграційний ендпоінт партнерів | JSON Array |
+
+---
+
+## ☁️ Деплой на Render.com
+
+Проєкт містить файл `render.yaml` для миттєвого розгортання (Blueprint):
+
+1. Зареєструйтесь на [Render.com](https://render.com/).
+2. Натисніть **New** ➔ **Blueprint**.
+3. Підключіть репозиторій `Render-API`.
+4. Render автоматично підхопить `render.yaml`, встановить залежності та запустить сервіс через `gunicorn app:app`.
+
+---
+
+## 📁 Структура проєкту
+
+```
+Render-API/
+├── .github/workflows/
+│   └── ci.yml               # GitHub Actions CI/CD пайплайн
+├── tests/
+│   ├── __init__.py
+│   └── test_app.py          # Автоматизовані юніт-тести
+├── app.py                   # Головний файл Flask додатка, Swagger UI та ендпоінти
+├── config.py                # Конфігурація бази даних з авто-конвертацією URI
+├── models.py                # SQLAlchemy модель Product
+├── render.yaml              # Конфігурація для хмарного деплою на Render
+├── requirements.txt         # Залежності Python (Gunicorn, psycopg2-binary, Flask)
+├── .env.example             # Приклад конфігурації оточення
+├── .gitignore               # Виключення тимчасових файлів та баз даних
+└── README.md                # Документація проєкту
+```
+
+---
+
+## 👨‍💻 Автор
+* **Литвиненко Дмитро** — *Backend Developer*  
+* GitHub: [@Lutvunenko-Dmutro](https://github.com/Lutvunenko-Dmutro)
